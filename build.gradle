@@ -45,7 +45,7 @@ configure(allprojects) { project ->
 				entry 'log4j-jul'
 				entry 'log4j-slf4j-impl'
 			}
-			dependency "org.slf4j:slf4j-api:1.7.36"
+			dependency "org.slf4j:slf4j-api:2.0.7"
 			dependency("com.google.code.findbugs:findbugs:3.0.1") {
 				exclude group: "dom4j", name: "dom4j"
 			}
@@ -289,9 +289,13 @@ configure(allprojects) { project ->
 		resolutionStrategy {
 			cacheChangingModulesFor 0, "seconds"
 		}
+		//新加的
 		repositories {
+			mavenLocal()
+			maven {url 'https://maven.aliyun.com/repository/public/'}
+			maven {url 'https://maven.aliyun.com/repository/google/'}
+			maven {url 'https://maven.aliyun.com/repository/spring/'}
 			mavenCentral()
-			maven { url "https://repo.spring.io/libs-spring-framework-build" }
 		}
 	}
 	configurations.all {

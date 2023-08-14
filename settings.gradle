@@ -1,5 +1,8 @@
 pluginManagement {
 	repositories {
+		// 新加的
+		maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+		maven { url "https://maven.aliyun.com/repository/spring-plugin" }
 		mavenCentral()
 		gradlePluginPortal()
 		maven { url "https://repo.spring.io/release" }
@@ -8,8 +11,11 @@ pluginManagement {
 
 plugins {
 	id "com.gradle.enterprise" version "3.12.1"
-	id "io.spring.ge.conventions" version "0.0.13"
+    // 注释
+//	id "io.spring.ge.conventions" version "0.0.13"
 }
+
+include "unravely"
 
 include "spring-aop"
 include "spring-aspects"

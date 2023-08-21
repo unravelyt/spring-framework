@@ -16,12 +16,14 @@
 
 	<!-- 启动Spring: 配置加载Spring文件的监听器 -->
 	<listener>
+<!--		Tomcat会解析web.xml，反射创建ContextLoaderListener。不要以为只有Spring有对象容器，Tomcat也有-->
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
 	<!-- 启动Spring MVC -->
 	<servlet>
 		<!-- 配置Spring MVC的前端核心控制器 -->
+<!--		DispatherServlet的init方法在其父类HttpServletBean-->
 		<servlet-name>dispatcherServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<!-- 加载Spring MVC配置文件 -->

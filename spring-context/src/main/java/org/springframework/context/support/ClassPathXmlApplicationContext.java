@@ -139,8 +139,10 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			throws BeansException {
 
 		super(parent);
+		//设置 Spring 的资源加载器
 		setConfigLocations(configLocations);
 		if (refresh) {
+			//refresh()是一个模板方法，规定了IOC容器的启动流程，有些逻辑要交给其子类去实现
 			refresh();
 		}
 	}

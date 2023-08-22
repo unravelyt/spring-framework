@@ -99,8 +99,9 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 	 * Initialize the root web application context.
 	 */
 	@Override
-	public void contextInitialized(ServletContextEvent event) {
-		//web.xml 初始化容器
+	public void contextInitialized(ServletContextEvent event) { //Event对象其实就是被监听对象的包装
+		//web.xml 初始化容器 https://zhuanlan.zhihu.com/p/65258266
+		//最终IOC容器其实是存放在ServletContext对象（容器）中
 		initWebApplicationContext(event.getServletContext());
 	}
 

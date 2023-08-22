@@ -130,7 +130,8 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			beanFactory.setSerializationId(getId());
 			//对 IOC 容器进行定制化，如设置启动参数，开启注解的自动装配等
 			customizeBeanFactory(beanFactory);
-			//调用载入Bean定义的方法，使用了一个委派模式，在当前类中只定义了抽象的loadBeanDefinitions 方法，具体的实现调用子类容器
+			//调用载入Bean定义的方法，使用了一个委派模式，在当前类中只定义了抽象的loadBeanDefinitions 方法，
+			//真正调用的是其子类 AbstractXmlApplicationContext 对该方法的实现
 			loadBeanDefinitions(beanFactory);
 			this.beanFactory = beanFactory;
 		}

@@ -55,9 +55,10 @@ import org.springframework.util.Assert;
  */
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
 
-	//
+	//读取注解的 Bean定义读取器，并将其设置到容器中
 	private final AnnotatedBeanDefinitionReader reader;
 
+	//扫描指定类路径中注解 Bean定义的扫描器，并将其设置到容器中
 	private final ClassPathBeanDefinitionScanner scanner;
 
 
@@ -65,6 +66,8 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * Create a new AnnotationConfigApplicationContext that needs to be populated
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
+	// 默认构迹函数，初始化一个空容器，容器不包含任何 Bean 信息，需要在稍后通过调用其 register()
+	// 方法注册配置类，并调用 refresh()方法新容器，触发容器对注解 Bean 的载入、解析和注册过程
 	public AnnotationConfigApplicationContext() {
 		StartupStep createAnnotatedBeanDefReader = getApplicationStartup().start("spring.context.annotated-bean-reader.create");
 		this.reader = new AnnotatedBeanDefinitionReader(this);
@@ -89,6 +92,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * {@link Configuration @Configuration} classes
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
+		//最常用的构选函数，将涉及到的配置类传递给该构造函数，以实现将相应配置类中的 Bean 自动注册到容器中
 		this();
 		register(componentClasses);
 		refresh();
@@ -101,6 +105,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * @param basePackages the packages to scan for component classes
 	 */
 	public AnnotationConfigApplicationContext(String... basePackages) {
+		//该构选函数会自动扫指以给定的包及子包下的所有类，并自动识别所有的 Spring Bean，将其注册到容器中
 		this();
 		scan(basePackages);
 		refresh();
@@ -130,6 +135,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * @see FullyQualifiedAnnotationBeanNameGenerator
 	 */
 	public void setBeanNameGenerator(BeanNameGenerator beanNameGenerator) {
+		//为容器的注解bean 读取器和注解 Bean 扫描器设置Bean 名称产生器
 		this.reader.setBeanNameGenerator(beanNameGenerator);
 		this.scanner.setBeanNameGenerator(beanNameGenerator);
 		getBeanFactory().registerSingleton(
@@ -143,6 +149,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * and/or {@link #scan(String...)}.
 	 */
 	public void setScopeMetadataResolver(ScopeMetadataResolver scopeMetadataResolver) {
+		//为容器的注解bean读取器和注解Bean扫插器 设置作用范围元信息解析器
 		this.reader.setScopeMetadataResolver(scopeMetadataResolver);
 		this.scanner.setScopeMetadataResolver(scopeMetadataResolver);
 	}
@@ -163,6 +170,8 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	@Override
 	public void register(Class<?>... componentClasses) {
+		// 为容器注册一个要被处理的注解Bean。新注册的 Bean，必须手动调用容器的
+		// refresh()方法剧新容器。触发容器对新注册的Bean的处理
 		Assert.notEmpty(componentClasses, "At least one component class must be specified");
 		StartupStep registerComponentClass = getApplicationStartup().start("spring.context.component-classes.register")
 				.tag("classes", () -> Arrays.toString(componentClasses));
@@ -180,6 +189,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	@Override
 	public void scan(String... basePackages) {
+		//扫措指定包路径及其子包下的注解类，为了使新添加的类被处理，必须手动调用refresh()方法刷新容器
 		Assert.notEmpty(basePackages, "At least one base package must be specified");
 		StartupStep scanPackages = getApplicationStartup().start("spring.context.base-packages.scan")
 				.tag("packages", () -> Arrays.toString(basePackages));

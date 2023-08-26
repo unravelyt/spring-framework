@@ -236,6 +236,7 @@ public abstract class AnnotationConfigUtils {
 
 	static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {
 		AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
+		//如果Bean定义中有@Lazy注解，则将Bean 预实例化属性设置为@Lazy注解的值
 		if (lazy != null) {
 			abd.setLazyInit(lazy.getBoolean("value"));
 		}
@@ -245,10 +246,11 @@ public abstract class AnnotationConfigUtils {
 				abd.setLazyInit(lazy.getBoolean("value"));
 			}
 		}
-
+		//如果Bean定义中有@Prmary注解，则为该Bean设置为autowiring 自动依赖注入装配的首选对象
 		if (metadata.isAnnotated(Primary.class.getName())) {
 			abd.setPrimary(true);
 		}
+		//如果Bean定义中有@Dependson注解，期为该Bean 设置所依赖的 Bean 名称，容器将确保在实例化该 Bean 之前首先实例化所依赖的 Bean
 		AnnotationAttributes dependsOn = attributesFor(metadata, DependsOn.class);
 		if (dependsOn != null) {
 			abd.setDependsOn(dependsOn.getStringArray("value"));
@@ -268,15 +270,18 @@ public abstract class AnnotationConfigUtils {
 			ScopeMetadata metadata, BeanDefinitionHolder definition, BeanDefinitionRegistry registry) {
 
 		ScopedProxyMode scopedProxyMode = metadata.getScopedProxyMode();
+		//如果配置的@Scope注解的 proxyMode 属性值为NO，则不应用代理模式
 		if (scopedProxyMode.equals(ScopedProxyMode.NO)) {
 			return definition;
 		}
 		boolean proxyTargetClass = scopedProxyMode.equals(ScopedProxyMode.TARGET_CLASS);
+		//为注册的 Bean 创建相应模式的代理对象
 		return ScopedProxyCreator.createScopedProxy(definition, registry, proxyTargetClass);
 	}
 
 	@Nullable
 	static AnnotationAttributes attributesFor(AnnotatedTypeMetadata metadata, Class<?> annotationClass) {
+		//processCommonDefinitionAnnotations() 方法
 		return attributesFor(metadata, annotationClass.getName());
 	}
 

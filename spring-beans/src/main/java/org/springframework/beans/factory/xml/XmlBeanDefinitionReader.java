@@ -307,6 +307,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	@Override
 	public int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {
+		//将读入的 XML 资源进行特殊编码处理
 		return loadBeanDefinitions(new EncodedResource(resource));
 	}
 
@@ -331,6 +332,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 
 		try (InputStream inputStream = encodedResource.getResource().getInputStream()) {
+			//从 InputStream 中得到 XML 的解析源
 			InputSource inputSource = new InputSource(inputStream);
 			if (encodedResource.getEncoding() != null) {
 				inputSource.setEncoding(encodedResource.getEncoding());
@@ -387,7 +389,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
+			//将 XML 文件转换为 DOM 对象，解析过程由 documentLoader 实现
 			Document doc = doLoadDocument(inputSource, resource);
+			//这里是启动对 Bean 定义解析的详细过程，该解析过程会用到 Spring 的 Bean 配置规则
 			int count = registerBeanDefinitions(doc, resource);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
@@ -506,9 +510,14 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
+		//得到 BeanDefinitionDocumentReader 来对 xml 格式的 BeanDefinition 解析
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
+		//获得容器中注册的 Bean 数量
 		int countBefore = getRegistry().getBeanDefinitionCount();
+		//解析过程入口，这里使用了委派模式，BeanDefinitionDocumentReader 只是个接口,
+		//具体的解析实现过程有实现类 DefaultBeanDefinitionDocumentReader 完成
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
+		//统计解析的 Bean 数量
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}
 

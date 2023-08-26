@@ -5,6 +5,7 @@ import com.unravely.service.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 
 public class Main {
@@ -27,7 +28,9 @@ public class Main {
 
 	private static void contextTest() {
 		//注解
-//		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+		AnnotationConfigApplicationContext context2 = new AnnotationConfigApplicationContext(AppConfig.class);
+
+		AnnotationConfigWebApplicationContext context1 = new AnnotationConfigWebApplicationContext();
 
 		//xml
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("application.xml");

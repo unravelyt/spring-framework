@@ -130,12 +130,14 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 		//获取 Bean 配置资源的定位
 		Resource[] configResources = getConfigResources();
 		if (configResources != null) {
-			//Xml Bean读取器调用其父类AbstractBeanDefinitionReader 读取定位的Bean配置资源
+			//Xml Bean读取器调用其父类AbstractBeanDefinitionReader读取定位的Bean配置资源
 			reader.loadBeanDefinitions(configResources);
 		}
-		// 如果子类中获取的 Bean 配置资源定位为空，则获取 ClassPathXmlApplicationContext
+		// 如果子类中获取的 Bean 配置资源定位为空，则获取ClassPathXmlApplicationContext
+		// 构造方法中 setConfigLocations 方法设置的资源
 		String[] configLocations = getConfigLocations();
 		if (configLocations != null) {
+			//Xml Bean读取器调用其父类AbstractBeanDefinitionReader读取定位的Bean配置资源
 			reader.loadBeanDefinitions(configLocations);
 		}
 	}
@@ -148,6 +150,8 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @return an array of Resource objects, or {@code null} if none
 	 * @see #getConfigLocations()
 	 */
+	//这里又使用了一个委托模式，调用子类的获取 Bean 配置资源定位的方法 该方法在 ClassPathXmlApplicationContext 中进行实现，对于我们
+	//举例分析源码的 ClassPathXmlApplicationContext 没有使用该方法
 	@Nullable
 	protected Resource[] getConfigResources() {
 		return null;

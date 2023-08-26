@@ -249,7 +249,9 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		}
 		else {
 			// Can only load single resources by absolute URL.
+			// 将指定位置的 Bean 配置信息解析为 Spring IOC 容器封装的资源 加载单个指定位置的 Bean 配置信息
 			Resource resource = resourceLoader.getResource(location);
+			//委派调用其子类 XmlBeanDefinitionReader 的方法，实现加载功能
 			int count = loadBeanDefinitions(resource);
 			if (actualResources != null) {
 				actualResources.add(resource);
@@ -266,6 +268,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		Assert.notNull(locations, "Location array must not be null");
 		int count = 0;
 		for (String location : locations) {
+			//XmlBeanDefinitionReader 方法
 			count += loadBeanDefinitions(location);
 		}
 		return count;

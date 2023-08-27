@@ -987,13 +987,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	//---------------------------------------------------------------------
 
 	@Override
-	public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
-			throws BeanDefinitionStoreException {
+	public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) throws BeanDefinitionStoreException {
 
+		// 10. 验证 BeanName 和 BeanDefinition 不为空
 		Assert.hasText(beanName, "Bean name must not be empty");
 		Assert.notNull(beanDefinition, "BeanDefinition must not be null");
 
-		//校验解析BeanDefinition
+		// 11. 如果当前的 BeanDefinition 是 AbstractBeanDefinition 子类则验证对象信息
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
 				((AbstractBeanDefinition) beanDefinition).validate();
@@ -1005,10 +1005,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
+		// 如果容器中已经存在了该 BeanName 所对应的 BeanDefinition
 		if (existingDefinition != null) {
+			// 如果不允许重写（替换）原始的 BeanDefinition直接抛异常
 			if (!isAllowBeanDefinitionOverriding()) {
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			}
+			// 如果允许替换则比较两个 BeanDefinition 的 @Role 值
 			else if (existingDefinition.getRole() < beanDefinition.getRole()) {
 				// e.g. was ROLE_APPLICATION, now overriding with ROLE_SUPPORT or ROLE_INFRASTRUCTURE
 				if (logger.isInfoEnabled()) {
@@ -1031,9 +1034,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							"] with [" + beanDefinition + "]");
 				}
 			}
+			// 将新的 BeanDefinition 对象添加到 Map 中
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 		}
+		// 12. 如果 Map 中不存在 BeanName 所对应的的 BeanDefinition
 		else {
+			// 13. 判断当前工厂是否已经开始创建 Bean 对象
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
 				synchronized (this.beanDefinitionMap) {
@@ -1047,14 +1053,18 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 			else {
 				// Still in startup registration phase
+				// 14. 将 BeanDefinition 直接添加到 Map 中
 				this.beanDefinitionMap.put(beanName, beanDefinition);
+				// 15. 如果非正在创建则直接将 BeanName 添加到 BeanName List 中
 				this.beanDefinitionNames.add(beanName);
 				removeManualSingletonName(beanName);
 			}
 			this.frozenBeanDefinitionNames = null;
 		}
 
+		// 如果 Map 中已存在 BeanName 对应的 BeanDefinition 或者 BeanName 为单例模式
 		if (existingDefinition != null || containsSingleton(beanName)) {
+			// 重置 BeanName 在容器中对应的 BeanDefinition
 			resetBeanDefinition(beanName);
 		}
 		else if (isConfigurationFrozen()) {

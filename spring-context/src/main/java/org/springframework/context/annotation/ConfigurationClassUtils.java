@@ -121,7 +121,7 @@ abstract class ConfigurationClassUtils {
 				return false;
 			}
 		}
-
+		//@Configuration原理
 		Map<String, Object> config = metadata.getAnnotationAttributes(Configuration.class.getName());
 		if (config != null && !Boolean.FALSE.equals(config.get("proxyBeanMethods"))) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);

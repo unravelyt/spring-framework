@@ -162,7 +162,7 @@ public abstract class BeanDefinitionReaderUtils {
 		// Register bean definition under primary name.
 		//获取解析的 BeanDefinition 的名称
 		String beanName = definitionHolder.getBeanName();
-		//向 TOC 容器注册 BeanDefinition
+		//9. 向IOC容器注册BeanDefinition
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
 
 		// Register aliases for bean name, if any.
